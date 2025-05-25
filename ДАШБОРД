@@ -1,0 +1,11 @@
+Компонент: Chart
+Компонент: RadioButton
+
+Редактирование в свойствах: DataSourse
+Потом Series - Источники данных на: Перевозчика и Стоимость
+
+Код для RadioButton:
+1 кнопка
+chart1.Series[0].ChartType = SeriesChartType.Column;
+2 кнопка
+chart1.Series[0].ChartType = SeriesChartType.Pie;
