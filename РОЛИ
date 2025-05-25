@@ -1,0 +1,21 @@
+Тыкаем по таблице дважды, в этой строке прописываем:
+checkRole(PersonalData.Role);
+Далее ниже в пустой строке: 
+private string checkRole(string role)
+{
+    switch (role)
+    {
+        case ("Кассир"):
+            return role;
+
+        case ("Покупатель"):
+            button2.Dispose();
+            button3.Dispose();
+            return role;
+
+        default:
+            button1.Dispose();
+            button2.Dispose();
+            button3.Dispose();
+            return role;
+    }
