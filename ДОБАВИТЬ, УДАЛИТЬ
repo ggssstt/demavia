@@ -1,0 +1,24 @@
+Добавляем кнопку ДОБАВИТЬ : (это в начале кода): public int click = 0;
+if (click == 0)
+{
+    рейсыBindingSource.AddNew();
+    click += 1;
+}
+else
+{
+    рейсыBindingSource.EndEdit();
+    рейсыTableAdapter.Update(авиарейсыDataSet);
+    click = 0;
+
+}
+Добавляем кнопку удаления:
+if (рейсыBindingSource.Current != null)
+{
+    рейсыBindingSource.RemoveCurrent();
+    рейсыBindingSource.EndEdit();
+    рейсыTableAdapter.Update(авиарейсыDataSet);
+}
+else
+{
+    MessageBox.Show("Нет выбранной строки для удаления.");
+}
