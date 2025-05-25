@@ -22,3 +22,5 @@ else
 {
     MessageBox.Show("Нет выбранной строки для удаления.");
 }
+
+ЗАКРЫТЬ ОТЛАДКУ Application.Exit();
