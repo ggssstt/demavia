@@ -1,0 +1,33 @@
+1.	Создать форму, кнопки.
+ПЕРЕХОД по формам:
+  Форма форма = new форма();
+  форма.Show();
+  this.Hide();
+2.	ЗАКРЫТЬ форму: Application.Exit();
+3.	ВЫЙТИ в авторизацию:
+ Авторизация авторизация= new Авторизация();
+ авторизация.Show();
+ this.Hide();
+4.	Разграничение ролей после входа:
+private string checkRole(string role)
+{
+    switch (role)
+    {
+        case ("Учитель"):
+            MessageBox.Show($"Добро пожаловать {PersonalData.Login}", "Уведомление", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return role;
+
+       case ("Студент"):
+         button1.Dispose();
+         button3.Dispose();
+            MessageBox.Show($"Добро пожаловать {PersonalData.Login}", "Уведомление", MessageBoxButtons.OK, MessageBoxIcon.Information);                    
+            return role;
+
+        default:
+            button1.Dispose();
+            button2.Dispose();
+            button3.Dispose();
+            MessageBox.Show("Учетная запись некорректна.\rОбратитесь в тех. поддержку.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return role;
+    }
+}
