@@ -1,8 +1,12 @@
 КЛАСС DB
-public string stringCon()
-{
-    return @"";
-}
+public class DB
+    {
+        public string stringCon()
+        {
+            return @"";
+        }
+    }
+
 
 КЛАСС PersonalData
 public class PersonalData
