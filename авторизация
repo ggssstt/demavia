@@ -1,0 +1,60 @@
+КЛАСС DB
+public string stringCon()
+{
+    return @"";
+}
+
+КЛАСС PersonalData
+public class PersonalData
+{
+    public static int IdUser { get; private set; }
+    public static string Password { get; private set; }
+    public static string Login { get; private set; }
+    public static string Role { get; private set; }
+
+    public bool SetPersonalData(string login, string password)
+    {
+        var db = new DB();
+        string sqlExpression = "SELECT TOP 1 * FROM Пользователи WHERE Логин = @Login AND Пароль = @Password";
+        using (SqlConnection connection = new SqlConnection(db.stringCon()))
+        {
+            connection.Open();
+            using (SqlCommand command = new SqlCommand(sqlExpression, connection))
+            {
+                command.Parameters.AddWithValue("@Login", login);
+                command.Parameters.AddWithValue("@Password", password);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        IdUser = (int)reader["ID_Пользователя"];
+                        Login = reader["Логин"].ToString();
+                        Password = reader["Пароль"].ToString();
+                        Role = reader["Роль"].ToString();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+    }
+}
+
+1.	Сделать форму, заполнить элементами (логин, пароль, кнопки) 
+2.	 Перейти по кнопке ВОЙТИ, прописать код:
+    var login = textBox1.Text;
+    var password = textBox2.Text;
+    var PI = new PersonalData();
+    if (PI.SetPersonalData(login, password))
+    {
+        var Авторизация = new Меню();
+        Авторизация.Show();
+        this.Hide();
+    }
+    else
+    {
+        MessageBox.Show("Не правильно введен логин или пароль!");
+    }
+(ОБЯЗАТЕЛЬНО СОЗДАТЬ ФОРМУ КУДА БУДЕТ ЧЕЛОВЕК ПЕРЕХОДИТЬ ПОСЛЕ АВТОРИЗАЦИИ)
+
