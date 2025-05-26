@@ -1,0 +1,245 @@
+
+  
+
+
+        ЛУЧШЕ ЗАПОЛНЯЯ ТАБЛИЦУ БД СРАЗУ СДЕЛАТЬ ТАБЛИЦУ "ПОЛЬЗОВАТЕЛИ" ДЛЯ АВТОРИЗАЦИИ, ЧТОБЫ ПОТОМ НЕ ОБНОВЛЯТЬ И СРАЗУ СВЯЗАТЬ С ПРИЛОЖЕНИЕМ!!!
+
+
+
+      В самом начале кода надо добавить код :
+
+namespace galleries1
+{
+    public partial class Группа : Form
+    {
+        public int click = 0; - именно этот код добавить, он идет после названия формы(таблицы)     
+
+
+
+
+
+      Код кнопки "ДОБАВИТЬ":
+
+          {
+                if (click == 0)
+                {
+                    группаBindingSource.AddNew(); - название таблицы изменить на данную
+                    click += 1;
+                }
+                else
+                {
+                    группаBindingSource.EndEdit();
+                    группаTableAdapter.Update(_GALLERIES_KHODZHERDataSet);
+                    click = 0;
+                }
+            }
+
+
+
+
+
+
+       Код кнопки "УДАЛИТЬ":
+
+        {
+            if (группаBindingSource.Current != null)
+            {
+                группаBindingSource.RemoveCurrent();
+                группаBindingSource.EndEdit();
+                группаTableAdapter.Update(_GALLERIES_KHODZHERDataSet.Группа);
+            }
+            else
+            {
+                MessageBox.Show("Нет выбранных элементов");
+            }
+        }
+    }
+}
+
+
+
+
+
+
+       Код чтобы вернуться с таблицы на Главную:
+
+            {
+                Form2 form2 = new Form2(); - вместо Формы указывается название таблицы 
+                form2.Show();
+                this.Close();
+            }
+
+
+
+
+
+
+       Код для Авторизации в таблице DB класс:
+
+namespace galleries1
+{
+    internal class DB
+    {
+        public string stringCon()
+        {
+
+            {
+                return @"Data Source=LAPTOP-2K9LM0TE;Initial Catalog=GALLERIES,KHODZHER;Integrated Security=True;Encrypt=False";
+            }
+        }
+    }
+}
+    
+
+
+
+
+
+         Код для Авторизации в таблице PersonalData класс:
+
+namespace galleries1
+{
+    internal class PersonalData
+    {
+
+        // public static int IdUser { get; private set; }
+        public static string Password { get; private set; }
+        public static string Login { get; private set; }
+        public static string Role { get; private set; }
+
+        public bool SetPersonalData(string login, string password)
+        {
+            var db = new DB();
+
+            string sqlExpression = "SELECT TOP 1 * FROM Пользователи WHERE Логин = @Login AND Пароль = @Password";
+
+            using (SqlConnection connection = new SqlConnection(db.stringCon()))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(sqlExpression, connection))
+                {
+                    command.Parameters.AddWithValue("@Login", login);
+                    command.Parameters.AddWithValue("@Password", password);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+
+                          //  IdUser = (int)reader["ID_Пользователя"];
+                            Login = reader["Логин"].ToString();
+                            Password = reader["Пароль"].ToString();
+                            Role = reader["Роль"].ToString();
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+    }
+}
+
+
+
+
+     
+
+             Таблица Program.cs находится в Обозревателе решений. 
+
+             В таблице Program.cs написано как называется База данных и также там нужно будет изменить какая таблица при выводе будет выводится 1-ая на экран, обычно выводится таблица Авторизация!!!
+
+
+
+
+
+          Код кнопки "ВЫЙТИ" в таблице Главное меню: 
+
+
+            Application.Exit();
+        }
+    }
+  
+}
+
+
+
+
+
+            Код кнопки перехода с Главного меню в нужную таблицу:
+
+        {
+            Клиент клиент = new Клиент();
+            клиент.Show();
+            Hide();
+        }
+
+
+
+
+
+
+         Код роли Преподавателя и Студента(или типо Пользователя и Администратора, зависит от предметной области) этот код пишется в каждой таблице, чтобы для администратора были все кнопки, а у пользователя только одна.
+
+          private string checkRole(string role)
+        {
+            switch (role)
+            {
+                case ("Преподаватель"):
+
+
+                    return role;
+                case ("Студент"):
+                    button3.Visible = false;
+                    button1.Visible = false;
+
+                    return role;
+                default:
+                    button3.Visible = false;
+                    button1.Visible = false;
+
+                    return role;
+            }
+        }
+               
+
+
+
+           В любой таблице с окончанием _Load в самом низу пишется код, чтобы дать роль Администратору или Пользователю checkRole(PersonalData.Role); ЛИБО ТАКОЙ - checkRole(PersonalData.Role.ToUpper());
+
+ private void Преподаватель_Load(object sender, EventArgs e)
+ {
+     // TODO: данная строка кода позволяет загрузить данные в таблицу "_STUDENT_KHODZHERDataSet.Преподаватель". При необходимости она может быть перемещена или удалена.
+     this.преподавательTableAdapter.Fill(this._STUDENT_KHODZHERDataSet.Преподаватель);
+     checkRole(PersonalData.Role);
+
+
+
+
+
+
+
+
+
+
+                                    ЗАПРОСЫ (Минимальное, Максимальное, Среднее значение)
+
+      Чтобы сделать запросы, нужно зайти в нужную бд и нажать на "Представления", дальше "Создать представления", дальше высветится таблица со всеми таблицами, нажать Закрыть, далее вставляем код:
+       SELECT MAX(Оценка) AS Максимальная оценка MIN(Оценка) AS Минимальная оценка AVG(Оценка) AS Средняя оценка
+       FROM    dbo.Оценки      (КОГДА ВСТАВИЛИ КОД, НАЖИМАЕМ НА "Выполнить код SQL) (СОХРАНЯЕМ ЗАПРОС И ПЕРЕХОДИМ В ВИЖУАЛ)
+
+       Нажимаем на Источники данных и жмем на на 3 по счету слева кнопку и дальш выбираем Таблицы и Представления, выбираем там только наш запрос
+       Дальше заходим в обозреватель решений и создаем новую форму, далее в Источнике данных выбираем наш запрос и переносим его в форму и нажимаем на Пуск
+
+ 
+
+
+
+              
+
+
+
+
+
